@@ -35,7 +35,7 @@ const updateEmployees = async (req, res) => {
   });
 };
 const getAllEmployees = async (req, res) => {
-  const employees = await Employess.find(id);
+  const employees = await Employess.find();
   return res.status(200).json({
     success: employees ? true : false,
     productDatas: employees ? employees : "Cannot get products by id",

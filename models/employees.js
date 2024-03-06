@@ -1,17 +1,15 @@
 const mongoose = require("mongoose"); // Erase if already required
 
 // Declare the Schema of the Mongo model
-var productSchema = new mongoose.Schema(
+var employeesSchema = new mongoose.Schema(
   {
     name: {
       type: String,
       required: true,
-      
     },
     position: {
       type: String,
       required: true,
-    
     },
     department: {
       type: String,
@@ -24,10 +22,8 @@ var productSchema = new mongoose.Schema(
     phone: {
       type: String,
       required: true,
-      unique : true,
+      unique: true,
     },
-   
-   
   },
   {
     timestamps: true,
@@ -35,4 +31,4 @@ var productSchema = new mongoose.Schema(
 );
 
 //Export the model
-module.exports = mongoose.model("Product", productSchema);
+module.exports = mongoose.model("Employees", employeesSchema);

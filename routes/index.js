@@ -5,12 +5,14 @@ const blogCategoryRouter = require("./blogCategory");
 const blogRouter = require("./blog");
 const brandCategoryRouter = require("./brand");
 const couponRouter = require("./coupon");
+const employeesRouter = require("./employees");
 const orderRouter = require("./order");
 const insertRouter = require("./insertData");
 
 const { errHandler, notFound } = require("../middlewares/errorHandler");
 const initRouter = (app) => {
   app.use("/api/user", userRouter);
+  app.use("/api/employees", employeesRouter);
   app.use("/api/product", productRouter);
   app.use("/api/productCategory", productCategorytRouter);
   app.use("/api/blogCategory", blogCategoryRouter);
@@ -24,4 +26,3 @@ const initRouter = (app) => {
   app.use(errHandler);
 };
 module.exports = initRouter;
-
