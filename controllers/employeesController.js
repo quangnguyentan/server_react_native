@@ -35,11 +35,55 @@ const updateEmployees = async (req, res) => {
   });
 };
 const getAllEmployees = async (req, res) => {
-  const employees = await Employess.find();
-  return res.status(200).json({
-    success: employees ? true : false,
-    productDatas: employees ? employees : "Cannot get products by id",
-  });
+  const queries = { ...req.query };
+  // console.log(queries);
+  const excludeFiels = ["limit", "sort", "page", "fields"];
+  excludeFiels.forEach((e) => delete queries[e]);
+  let queryString = JSON.stringify(queries);
+  queryString = queryString.replace(
+    /\b(gte|gt|lt|lte)\b/g,
+    (macthedEl) => `$${macthedEl}`
+  );
+  const fomatedQueries = JSON.parse(queryString);
+  if (queries?.title) {
+    fomatedQueries.title = { $regex: queries.title, $options: "i" };
+  }
+  try {
+    let queryCommad = Employess.find(fomatedQueries);
+    if (req.query.sort) {
+      const sortBy = req.query.sort.split(",").join(" ");
+      console.log(sortBy);
+      queryCommad = queryCommad.sort(sortBy);
+      // console.log(queryCommad);
+    }
+
+    if (req.query.fields) {
+      const fields = req.query.fields.split(",").join(" ");
+      queryCommad = queryCommad.select(fields);
+    }
+
+    const page = +req.query.page || 1;
+    const limit = +req.query.limit || process.env.LIMIT_PRODUCTS;
+    const skip = (page - 1) * limit;
+
+    queryCommad.skip(skip).limit(limit);
+    queryCommad
+      .then(async (response) => {
+        console.log(response);
+        const counts = await Employess.countDocuments(fomatedQueries);
+        return res.status(200).json({
+          success: response ? true : false,
+          counts,
+          products: response ? response : "Cannot get products",
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  } catch (err) {
+    console.log(err);
+    throw new Error(err.message);
+  }
 };
 const getEmployeesById = async (req, res) => {
   const { id } = req.params;
