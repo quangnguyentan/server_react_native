@@ -2,8 +2,7 @@ const Employess = require("../models/employees");
 
 const createEmployees = async (req, res) => {
   const { name, position, email, department, phone } = req.body;
-  if (!(name, position, email, department, phone))
-    throw new Error("Missing inputs");
+  if (!name) throw new Error("Missing inputs");
 
   const newEmployess = await Employess.create(req.body);
   return res.status(200).json({
